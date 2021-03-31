@@ -1,28 +1,34 @@
 <template lang='pug'>
   #app
-    Main(msg="Hello World")
+    Index(msg="Hello World")
 </template>
 
 <script>
-import Main from './components/Main.vue'
+import Index from './components/Index.vue'
 
 export default {
   name: 'App',
   components: {
-    Main
+    Index
   }
 }
 </script>
 
 <style lang="scss">
-$teste: red;
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+html, body {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #395e96;
+  background-image: linear-gradient(160deg, #395e96 0%, #5899a5 100%);
+}
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  margin-top: 60px;
-  color: $teste;
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>
