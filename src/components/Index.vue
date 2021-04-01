@@ -26,7 +26,13 @@ export default {
   },
   methods: {
     async saveNickname () {
-      console.log(this.nickname)
+      if (this.nickname == '') return alert('Please, insert a valid nickname.');
+
+      this.$socket.emit('set_nickname', this.nickname, (res) => {
+        if (res == 'success') {
+          console.log('success')
+        }
+      })
     }
   }
 }
