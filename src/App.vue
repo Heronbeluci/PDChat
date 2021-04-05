@@ -1,15 +1,34 @@
 <template lang='pug'>
   #app
-    Index(msg="Hello World")
+    <component v-bind:is="component" />
 </template>
 
 <script>
 import Index from './components/Index.vue'
+import Chat from './components/Chat.vue'
 
 export default {
   name: 'App',
   components: {
-    Index
+    Index, Chat
+  },
+  data (){
+    return {
+      component: "Index",
+
+      nickname: ''
+    }
+  },
+  methods: {
+    toggleComponent (name){
+      this.component = name;
+    },
+    setNickname (name) {
+      this.nickname = name
+    },
+    getNickname () {
+      return this.nickname
+    }
   }
 }
 </script>

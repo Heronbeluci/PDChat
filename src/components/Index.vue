@@ -9,7 +9,7 @@
 
           form(@submit.prevent="saveNickname" method="post" class="uk-form-stacked")
             .input-group
-              input.form-control(placeholder="Nickname" v-model="nickname")
+              input.form-control(placeholder="Nome de usuário" v-model="nickname")
               .input-group-append
                 button.btn.btn-primary
                   b-icon-arrow-right-short
@@ -30,7 +30,8 @@ export default {
 
       this.$socket.emit('set_nickname', this.nickname, (res) => {
         if (res == 'success') {
-          console.log('success')
+          this.$parent.setNickname(this.nickname)
+          this.$parent.toggleComponent('Chat')
         }
       })
     }
