@@ -26,7 +26,6 @@
                   button#button-addon.btn.btn-link(type='submit')
                     b-icon-arrow-right
 
-
 </template>
 
 <script>
@@ -36,46 +35,55 @@ export default {
     return {
       nickname: this.$parent.getNickname(),
       message: '',
-      messages: [
-        {
-          id: 1,
-          nickname: 'John Doe2',
-          message: 'Message test',
-          datetime: '12:00 PM | Aug 13'
-        },
-        {
-          id: 2,
-          nickname: 'John 3',
-          message: 'Message test',
-          datetime: '12:00 PM | Aug 13',
-          me: true
-        }
-      ]
+      messages: []
     }
   },
   methods: {
     async submitMessage () {
+      var vm = this
       if (this.message == '') return alert('Please, insert a valid message.');
-      this.messages.push({
-        id: this.$uuid.v4(),
-        nickname: 'John 3',
-        message: this.message,
-        datetime: '12:00 PM | Aug 13',
-        me: true
-      })
-      var messageDisplay = this.$refs.messageDisplay;
 
+      var messageDisplay = this.$refs.messageDisplay;
       messageDisplay.scrollTop = messageDisplay.scrollHeight;
 
-      this.$socket.emit('chat_message', this.message, (res) => {
+      var id = this.$uuid.v4()
+      var date = new Date().getTime()
+      var message = this.message
+      this.$socket.emit('chat_message', {
+        id,
+        message: message,
+        date: date
+      }, (res) => {
+        console.log('res:', res)
         if (res == 'success') {
-          console.log('success')
+          vm.messages.push({
+            id,
+            nickname: vm.nickname,
+            message: message,
+            datetime: new Date(date).toLocaleString(),
+            me: true
+          })
+        } else if (res == 'nickname-needed') {
+          this.$parent.toggleComponent('Index')
         }
       })
-
       this.message = ''
+
     }
-  }
+  },
+  sockets: {
+    chat_message: function (data) {
+      var vm = this
+      // console.log('new message:', data)
+      vm.messages.push({
+        id: data.id,
+        nickname: data.nickname,
+        message: data.message,
+        datetime: new Date(data.date).toLocaleString(),
+        me: false
+      })
+    }
+  },
 }
 </script>
 

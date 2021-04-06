@@ -15,7 +15,7 @@ module.exports = (app) => {
     app.manager = new RoomManager(app)
 
     io.on("connection", socket => {
-        app.socket(app, socket)
+      app.socket(app, io, socket)
     });
 
     httpServer.listen(app.config.port, (err) => {
