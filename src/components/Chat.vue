@@ -54,7 +54,6 @@ export default {
         message: message,
         date: date
       }, (res) => {
-        console.log('res:', res)
         if (res == 'success') {
           vm.messages.push({
             id,
@@ -68,7 +67,12 @@ export default {
         }
       })
       this.message = ''
-
+    },
+    async sortItems () {
+      this.messages.sort((a, b) => {
+        return new Date(a.datetime) - new Date(b.datetime);
+      });
+      return this.messages;
     }
   },
   sockets: {
@@ -84,6 +88,21 @@ export default {
       })
     }
   },
+  mounted(){
+    var vm = this
+    let history = this.$parent.getHistory()
+    for (var i in history) {
+      let item = history[i]
+      vm.messages.push({
+        id: item.id,
+        nickname: item.owner,
+        message: item.message,
+        datetime: new Date(item.date).toLocaleString(),
+        me: item.owner == vm.nickname
+      })
+    }
+    this.sortItems()
+  }
 }
 </script>
 

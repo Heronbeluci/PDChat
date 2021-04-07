@@ -28,9 +28,10 @@ export default {
     async saveNickname () {
       if (this.nickname == '') return alert('Please, insert a valid nickname.');
 
-      this.$socket.emit('set_nickname', this.nickname, (res) => {
+      this.$socket.emit('set_nickname', this.nickname, (res, history) => {
         if (res == 'success') {
           this.$parent.setNickname(this.nickname)
+          this.$parent.setHistory(history)
           this.$parent.toggleComponent('Chat')
         }
       })

@@ -7,24 +7,33 @@ module.exports = (app, io, socket) => {
         let user = new User(socket, nickname)
         app.manager.addUserToRoom(user)
         users[socket.id] = user
-        callback('success')
+
+        app.mysql.query('SELECT * from history', function (error, results, fields) {
+            if (error) throw error;
+            callback('success', results)
+        });
     })
 
     socket.on("chat_message", (data, callback) => {
-        socket.emit('teste', 'teste')
         let user = users[socket.id]
         if (user == undefined) { return callback('nickname-needed')}
         let nickname = user.getNickname()
-
+        let date = new Date(data.date)
 
         socket.broadcast.emit("chat_message", {
+            id: data.id,
             nickname: nickname,
             message: data.message,
-            date: data.date
+            date: date
         })
-        // var datestring = (d.getFullYear()+"/"+("0"+(d.getMonth()+1)).slice(-2)+"/0" + d.getDate()).slice(-2) + "-" +  + "-" +  + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
-        console.log(nickname+':',data)
-        callback('success')
+
+        app.mysql.query('INSERT INTO `history` (`id`, `owner`, `message`, `date`) VALUES (?,?,?,?);', [
+            data.id, nickname, data.message, date
+        ], function (error, results, fields) {
+            if (error) throw error;
+
+            callback('success')
+        });
     })
 
     socket.on("disconnect", (nickname) => {

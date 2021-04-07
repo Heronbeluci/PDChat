@@ -15,7 +15,7 @@ export default {
   data (){
     return {
       component: "Index",
-
+      history: [],
       nickname: ''
     }
   },
@@ -26,8 +26,14 @@ export default {
     setNickname (name) {
       this.nickname = name
     },
+    setHistory (data) {
+      this.history = data
+    },
     getNickname () {
       return this.nickname
+    },
+    getHistory () {
+      return this.history
     }
   }
 }
